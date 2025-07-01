@@ -21,7 +21,7 @@ public class PaymentService {
 	public List<Payment> getPaymentsByOrderId(int orderId) throws PaymentNotFoundException {
 		List<Payment> list = paymentDao.getPaymentByOrderId(orderId);
 		if(list.isEmpty()) {
-			throw new PaymentNotFoundException("No payment record found for OrderId: "+orderId);
+			throw new PaymentNotFoundException("No payment record found for OrderId: \n"+orderId);
 		}
 		return list;
 	}

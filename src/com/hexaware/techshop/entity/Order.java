@@ -1,20 +1,18 @@
 package com.hexaware.techshop.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.hexaware.techshop.exception.InvalidDataException;
 
 public class Order {
 	
 	private int orderId;
     private Customer customer;
-    private Date orderDate;
+    private LocalDate orderDate;
     private double totalAmount;
     private String orderStatus;
 
-	public Order(int orderId, Customer customer, Date orderDate, double totalAmount, String orderStatus) {
-		this.orderId = orderId;
+	public Order(Customer customer, LocalDate orderDate, double totalAmount, String orderStatus) {
 		this.customer = customer;
 		this.orderDate = orderDate;
 		this.totalAmount = totalAmount;
@@ -41,11 +39,11 @@ public class Order {
 		this.customer = customer;
 	}
 
-	public Date getOrderDate() {
+	public LocalDate getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
 
@@ -65,14 +63,22 @@ public class Order {
 		this.orderStatus = orderStatus;
 	}
 
-	public void calculateTotalAmount(List<OrderDetail> orderDetails) {
+	List<OrderDetail> orderDetails = new ArrayList<>();
+	
+	public void calculateTotalAmount() {
 		totalAmount=0;
 		for(OrderDetail od: orderDetails) {
-			totalAmount +=od.calculateSubtotal();
+			totalAmount += od.calculateSubtotal();
 		}
 	}
+	
+	public void addOrderDetail(OrderDetail detail) {
+		List<OrderDetail> orderDetails= new ArrayList<>();
+		orderDetails.add(detail);
+	}
 	 
-	public void getOrderDetails(List<OrderDetail> orderDetails) {
+	public void getOrderDetails() {
+		System.out.println("OrderId: "+orderId+ " for customer: "+customer.getFirstName());
 		for(OrderDetail od: orderDetails) {
 			od.getOrderDetailInfo();
 		}
@@ -82,11 +88,14 @@ public class Order {
 		this.orderStatus=newStatus;
 	}
 	
-	public void cancelOrder(List<OrderDetail> orderDetails) throws InvalidDataException {
-		for(OrderDetail od: orderDetails) {
-			od.getProduct().setPrice(od.getProduct().getPrice());
-		}
+	public void cancelOrder() {	
 		this.orderStatus="Cancelled";
+	}
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", customer=" + (customer != null ? customer.getCustomerId() :"Null") + ", orderDate=" + orderDate + ", totalAmount="
+				+ totalAmount + ", orderStatus=" + orderStatus + "]";
 	}
 	
 }

@@ -3,25 +3,23 @@ package com.hexaware.techshop.entity;
 import com.hexaware.techshop.exception.InvalidDataException;
 
 public class Product {
-	
+
 	private int productId;
 	private String productName;
 	private String description;
 	private double price;
+	private String category;
 		
 
-	public Product(int productId, String productName, String description, double price) throws InvalidDataException {
-		this.productId = productId;
+	public Product() {
+	}
+
+	public Product(String productName, String description, double price, String category) throws InvalidDataException {
 		this.productName = productName;
 		this.description = description;
 		setPrice(price);
+		this.category = category;
 	}
-
-
-	public Product() {
-
-	}
-
 
 	public int getProductId() {
 		return productId;
@@ -63,22 +61,26 @@ public class Product {
 		this.price = price;
 	}
 
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public void getProductDetails() {
 	    System.out.println("Product ID: " + productId);
 	    System.out.println("Product Name: " + productName);
 	    System.out.println("Description: " + description);
 	    System.out.println("Price: " + price);
+	    System.out.println("Category: "+category);
 	}
 
-	public void updateProductInfo(String description, double price) throws InvalidDataException {
-		setDescription(description);
-	    setPrice(price);
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", productName=" + productName + ", description=" + description
+				+ ", price=" + price + ", category=" + category + "]\n";
 	}
-
-	public boolean isProductInStock(int quantityInStock) {
-		return quantityInStock > 0;
-	}
-	
-
-
 }

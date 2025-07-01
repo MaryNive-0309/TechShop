@@ -7,9 +7,9 @@ import com.hexaware.techshop.exception.InvalidDataException;
 
 public interface IOrderDetailDAO {
 	
-	public void insertOrderDetail(OrderDetail item);
-	public void updateQuantity(int orderDetailId, int newQuantity);
-	public void deleteOrderDetail(int orderDetailId);
+	public boolean insertOrderDetail(OrderDetail item);
+	public boolean updateQuantity(int orderDetailId, int newQuantity);
+	public boolean deleteOrderDetail(int orderDetailId);
 	public List<OrderDetail> getOrderDetailByOrderId(int orderId) throws InvalidDataException;
 
 }

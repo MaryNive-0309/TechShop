@@ -8,8 +8,7 @@ public class Payment {
 	private double amount;
 	private String paymentStatus;
 	
-	public Payment(int paymentId, Order order, String method, double amount, String paymentStatus) {
-		this.paymentId = paymentId;
+	public Payment(Order order, String method, double amount, String paymentStatus) {
 		this.order = order;
 		this.method = method;
 		this.amount = amount;
@@ -62,8 +61,8 @@ public class Payment {
 
 	@Override
 	public String toString() {
-		return "Payment [paymentId=" + paymentId + ", order=" + order + ", method=" + method + ", amount=" + amount
-				+ ", paymentStatus=" + paymentStatus + "]\n";
+		return "PaymentId= " + paymentId + ", Method=" + method + ", Amount=" + amount
+				+ ", PaymentStatus=" + paymentStatus + "]\n";
 	}
 
 	

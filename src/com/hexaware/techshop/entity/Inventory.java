@@ -1,5 +1,6 @@
 package com.hexaware.techshop.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.hexaware.techshop.exception.InsufficientStockException;
@@ -9,10 +10,9 @@ public class Inventory {
 	private int inventoryId;
 	private Product product;
 	private int quantityInStock;
-	private Date lastStockUpdate;	
+	private LocalDate lastStockUpdate;	
 
-	public Inventory(int inventoryId, Product product, int quantityInStock, Date lastStockUpdate) {
-		this.inventoryId = inventoryId;
+	public Inventory(Product product, int quantityInStock, LocalDate lastStockUpdate) {
 		this.product = product;
 		this.quantityInStock = quantityInStock;
 		this.lastStockUpdate = lastStockUpdate;
@@ -54,18 +54,19 @@ public class Inventory {
 	}
 
 
-	public Date getLastStockUpdate() {
+	public LocalDate getLastStockUpdate() {
 		return lastStockUpdate;
 	}
 
 
-	public void setLastStockUpdate(Date lastStockUpdate) {
+	public void setLastStockUpdate(LocalDate lastStockUpdate) {
 		this.lastStockUpdate = lastStockUpdate;
 	}
 
 	
 	public void addToInventory(int quantity) {
 		this.quantityInStock +=quantity;
+		lastStockUpdate = LocalDate.now();
 		
 	}
 	
@@ -74,6 +75,7 @@ public class Inventory {
 			throw new InsufficientStockException("Insufficient stock to remove");
 		}
 		this.quantityInStock -= quantity;
+		lastStockUpdate = LocalDate.now();
 	}
 	
 	public void updateStockQuantity(int newQuantity) throws InsufficientStockException {
@@ -84,7 +86,7 @@ public class Inventory {
 	}
 	
 	public boolean isProductAvailable(int quantityToCheck) {
-		return quantityInStock>=quantityToCheck;
+		return quantityInStock >=quantityToCheck;
 	}
 	
 	public double getInventoryValue() {

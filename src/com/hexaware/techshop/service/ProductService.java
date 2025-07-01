@@ -14,12 +14,13 @@ public class ProductService {
 	List<Product> product=new ArrayList<>();
 	
 	public void addProduct(Product product) throws InvalidDataException {
-		if(product==null) {
-			throw new InvalidDataException("Invalid product");
+		if(product==null || isDuplicateProduct(product.getProductName())) {
+			throw new InvalidDataException("Invalid product or Duplicate product name found");
 		}
 		productDao.insertProduct(product);
 	}
-	
+
+
 	public void updateProduct(int productId,String description,double price) throws InvalidDataException {
 		Product product=productDao.getProductById(productId);
 		if(product==null) {
@@ -47,17 +48,20 @@ public class ProductService {
 		return productDao.getProductById(productId);
 	}
 	
-	public List<Product> searchProductByName(String name){
+	public List<Product> searchProductByName(String name) throws InvalidDataException{
+		List<Product> productList=productDao.getAllProduct();
 		List<Product> prod=new ArrayList<>();
-		for(Product p: product) {
+		for(Product p: productList) {
 			if(p.getProductName().contains(name)) {
 				prod.add(p);
 			}
 		}
 		return prod;
 	}
-	
-	public boolean isDuplicateProduct(String name) {
+
+
+	public boolean isDuplicateProduct(String name) throws InvalidDataException {
+		List<Product> product=productDao.getAllProduct();
 		for(Product p:product) {
 			if(p.getProductName().equalsIgnoreCase(name)) {
 				return true;

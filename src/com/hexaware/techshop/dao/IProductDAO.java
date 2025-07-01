@@ -7,10 +7,11 @@ import com.hexaware.techshop.exception.InvalidDataException;
 
 public interface IProductDAO {
 	
-	public void insertProduct(Product product);
-	public void updateProduct(Product product);
-	public void deleteProduct(int productId);
+	public boolean insertProduct(Product product);
+	public boolean updateProduct(Product product);
+	public boolean deleteProduct(int productId);
 	List<Product> getAllProduct() throws InvalidDataException;
 	public Product getProductById(int productId) throws InvalidDataException;
+	public List<Product> searchProductByName(String name) throws InvalidDataException;
 
 }

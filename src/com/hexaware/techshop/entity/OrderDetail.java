@@ -9,8 +9,7 @@ public class OrderDetail {
 	private Product product;
 	private int quantity;	
     
-    public OrderDetail(int orderDetailId, Order order, Product product, int quantity) throws InvalidDataException {
-		this.orderDetailId = orderDetailId;
+    public OrderDetail(Order order, Product product, int quantity) throws InvalidDataException {
 		this.order = order;
 		this.product = product;
 		setQuantity(quantity);

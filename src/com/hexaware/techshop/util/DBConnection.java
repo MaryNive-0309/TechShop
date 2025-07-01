@@ -16,8 +16,7 @@ private static Connection con;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		return con;
 		
 	}
@@ -57,12 +56,10 @@ private static Connection con;
 	public static void closeResultSet(ResultSet rs) {
 		try {
 			if(rs!=null) 
-				rs.close();
-			
+				rs.close();			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 }

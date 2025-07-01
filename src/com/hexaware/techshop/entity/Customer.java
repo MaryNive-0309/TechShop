@@ -1,5 +1,7 @@
 package com.hexaware.techshop.entity;
 
+import java.util.List;
+
 import com.hexaware.techshop.exception.InvalidDataException;
 
 public class Customer {
@@ -109,16 +111,5 @@ public class Customer {
         System.out.println("Address: " + address);
         
 	}
-
-	public void updateCustomerInfo(String email, String phone, String address) throws InvalidDataException {
-        setEmail(email);
-        setPhone(phone);
-        setAddress(address);
-    }
-	
-	public int calculateTotalOrders() {
-		
-        return 0;
-    }
 
 }

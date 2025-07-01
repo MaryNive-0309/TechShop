@@ -17,71 +17,80 @@ public class CustomerDAOImpl implements ICustomerDAO{
 	Connection con=DBConnection.getConnection();
 	
 	@Override
-	public void insertCustomer(Customer customer) {
+	public boolean insertCustomer(Customer customer) {
 		// TODO Auto-generated method stub
 		
-		PreparedStatement pstmt =null ;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 		
 		String query="INSERT INTO Customers (FirstName,LastName,Email,Phone,Address) VALUES(?,?,?,?,?)";
 		try {
-			pstmt=con.prepareStatement(query);
+            pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, customer.getFirstName());
 			pstmt.setString(2, customer.getLastName());
 			pstmt.setString(3, customer.getEmail());
 			pstmt.setString(4, customer.getPhone());
-			pstmt.setString(5, customer.getAddress());
-			pstmt.executeUpdate();
-			
+			pstmt.setString(5, customer.getAddress());			
+			int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    customer.setCustomerId(generatedId);
+                }
+                return true;
+            }			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error inserting customer");
-		}
-		finally {
-			DBConnection.closePreparedStatement(pstmt);
-		}
+            System.out.println("Error in inserting customer: " + e.getMessage());
+        } finally {
+            DBConnection.closeResultSet(rs);
+            DBConnection.closePreparedStatement(pstmt);
+        }
+		return false;
 	}
 
 	@Override
-	public void updateCustomer(Customer customer) {
+	public boolean updateCustomer(Customer customer) {
 		// TODO Auto-generated method stub
 		
-		PreparedStatement pstmt =null ;
-		
+		PreparedStatement pstmt =null ;		
 		String query="UPDATE Customers SET Email=?, Phone=?, Address=? WHERE CustomerId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setString(1, customer.getEmail());
 			pstmt.setString(2, customer.getPhone());
-			pstmt.setString(3, customer.getAddress());
+			pstmt.setString(3, customer.getAddress());			
 			pstmt.setInt(4, customer.getCustomerId());
-			pstmt.executeUpdate();
+			int rows=pstmt.executeUpdate();
+			return rows>0;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error updating customer");
+			System.out.println("Error in updating customer " +e.getMessage());
 		}
 		finally {
-			DBConnection.closePreparedStatement(pstmt);		}
+			DBConnection.closePreparedStatement(pstmt);		
+		}
+		return false;
 	}
 
 	@Override
-	public void deleteCustomer(int customerId) {
+	public boolean deleteCustomer(int customerId) {
 		// TODO Auto-generated method stub
 		PreparedStatement pstmt =null ;
 		
-		String query="DELETE FROM Customers WHERE CustomerId=?";
-		try {
-			pstmt=con.prepareStatement(query);
-			pstmt.setInt(1, customerId);
-			pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error deleting customer");
-		}
-		finally {
-			DBConnection.closePreparedStatement(pstmt);
-		}
+        String query = "DELETE FROM Customers WHERE Customer_Id = ?";
+        try {
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, customerId);
+            int rows=pstmt.executeUpdate();
+			return rows>0;
+        } catch (SQLException e) {
+            System.out.println("Error in deleting customer: " + e.getMessage());
+        } finally {
+            DBConnection.closePreparedStatement(pstmt);
+        }
+		return false;
 	}
 
 	@Override
@@ -109,13 +118,12 @@ public class CustomerDAOImpl implements ICustomerDAO{
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error in retrieving customer");
+			System.out.println("Error in retrieving customer "+e.getMessage());
 		}
 		finally {
 			DBConnection.closeStatement(stmt);
 			DBConnection.closeResultSet(rs);
-		}
-		
+		}		
 		return list;
 	}
 
@@ -133,15 +141,13 @@ public class CustomerDAOImpl implements ICustomerDAO{
 			if(rs.next()) {
 				Customer c=new Customer(rs.getString("FirstName"), rs.getString("LastName"),
 						rs.getString("Email"),rs.getString("Phone"),rs.getString("Address"));
+				c.setCustomerId(rs.getInt("CustomerId"));
 				return c;
-			}
-			
-			
+			}						
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error in retreieving customer");
-		}
-		
+			System.out.println("Error in retreieving customer "+e.getMessage());
+		}		
 		finally {
 			DBConnection.closeResultSet(rs);
 			DBConnection.closePreparedStatement(pstmt);

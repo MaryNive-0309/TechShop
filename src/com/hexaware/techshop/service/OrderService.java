@@ -3,7 +3,6 @@ package com.hexaware.techshop.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import com.hexaware.techshop.dao.IOrderDAO;
@@ -18,13 +17,8 @@ public class OrderService {
 	List<Order> order=new ArrayList<>();
 	
 	public void addOrder(Order o) throws IncompleteOrderException, InvalidDataException {
-		if(o.getOrderId() == 0 || o.getCustomer()==null|| o.getOrderDate()==null) {
-			throw new IncompleteOrderException("Order is incomplete.Enter required fields");
-		}
-		for(Order orders:order) {
-			if(o.getOrderId()==orders.getOrderId()) {
-				throw new InvalidDataException("Duplicate OrderId found: "+o.getOrderId());
-			}
+		if(o == null || o.getCustomer()==null|  o.getOrderDate()==null) {
+			throw new IncompleteOrderException("Order is incomplete.");
 		}
 		orderDao.insertOrder(o);
 	}
@@ -64,6 +58,14 @@ public class OrderService {
 		return orderDao.getAllOrders();
 	}
 	
+	public Order getOrderById(int orderId) throws InvalidDataException {
+		Order order=orderDao.getOrderById(orderId);
+		if(order==null) {
+			throw new InvalidDataException("OrderId not found");
+		}
+		return order;
+	}
+	
 	public List<Order> sortOrdersByDate(boolean sortedList){
 		List<Order> orderSort=orderDao.getAllOrders();
 		orderSort.sort(new Comparator<Order>() {
@@ -77,5 +79,12 @@ public class OrderService {
 		return orderSort;
 	}
 	
-	
+	public void updateTotalAmount(int orderId, double totalAmount) throws InvalidDataException {
+		Order order = orderDao.getOrderById(orderId);
+		if(order==null) {
+			throw new InvalidDataException("Order not found");
+		}
+		order.setTotalAmount(totalAmount);
+		orderDao.updateOrderTotalAmount(orderId, totalAmount)
+;	}
 }

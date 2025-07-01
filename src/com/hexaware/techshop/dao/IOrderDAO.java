@@ -7,10 +7,11 @@ import com.hexaware.techshop.exception.InvalidDataException;
 
 public interface IOrderDAO {
 	
-	public void insertOrder(Order order);
-	public void updateOrderStatus(int orderId, String newStatus);
-	public void deleteOrder(int orderId);
+	public boolean insertOrder(Order order);
+	public boolean updateOrderStatus(int orderId, String newStatus);
+	public boolean deleteOrder(int orderId);
 	List<Order> getOrderByCustomerId(int customerId) throws InvalidDataException;
 	public Order getOrderById(int orderId) throws InvalidDataException;
 	List<Order> getAllOrders();
+	public boolean updateOrderTotalAmount(int orderId, double totalAmount); 
 }

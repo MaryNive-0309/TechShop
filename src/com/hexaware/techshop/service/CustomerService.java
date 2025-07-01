@@ -15,8 +15,7 @@ public class CustomerService {
 		
 		if(customer==null) {
 			throw new InvalidDataException("Invalid customer data");
-		}
-		
+		}		
 		Customer exists = customerDao.getCustomerById(customer.getCustomerId());
 		if(exists!=null) {
 			throw new InvalidDataException("CustomerId already exists");
@@ -35,7 +34,10 @@ public class CustomerService {
 		customer.setEmail(email);
 		customer.setPhone(phone);
 		customer.setAddress(address);
-		customerDao.updateCustomer(customer);		
+		boolean success = customerDao.updateCustomer(customer);
+		if(!success) {
+			throw new InvalidDataException("Failed to update customer detail");
+		}
 		return "Updated successfully";
 	}
 	
@@ -58,5 +60,6 @@ public class CustomerService {
 			throw new InvalidDataException("CustomerId not found");
 		}
 		return customer;
+
 	}
 }

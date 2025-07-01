@@ -17,93 +17,104 @@ import com.hexaware.techshop.util.DBConnection;
 public class OrderDAOImpl implements IOrderDAO{
 
 	Connection con=DBConnection.getConnection();	
-	PreparedStatement pstmt;
-	Statement stmt;
-	ResultSet rs;
 	
 	@Override
-	public void insertOrder(Order order) {
+	public boolean insertOrder(Order order) {
 		// TODO Auto-generated method stub
+		PreparedStatement pstmt =null ;
+		ResultSet rs =null;
 		
-		String query="Insert into Orders values(?,?,?,?,?)";
+		String query="Insert into Orders(CustomerId,OrderDate,TotalAmount,Status) values(?,?,?,?)";
 		try {
-			pstmt=con.prepareStatement(query);
-			pstmt.setInt(1, order.getOrderId());
-			pstmt.setInt(2, order.getCustomer().getCustomerId());
-			pstmt.setDate(3, new Date(order.getOrderDate().getTime()));
-			pstmt.setDouble(4, order.getTotalAmount());
-			pstmt.setString(5, order.getOrderStatus());
-			pstmt.executeUpdate();
-			
+			pstmt=con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, order.getCustomer().getCustomerId());
+            pstmt.setDate(2, Date.valueOf(order.getOrderDate()));
+			pstmt.setDouble(3, order.getTotalAmount());
+			pstmt.setString(4, order.getOrderStatus());
+			int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    order.setOrderId(generatedId);
+                }
+                return true;
+            }					
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			System.out.println("Error in inserting orders "+e.getMessage());
+		}		
 		finally {
 			DBConnection.closePreparedStatement(pstmt);
 		}
-		
+		return false;
+			
 	}
 
 	@Override
-	public void updateOrderStatus(int orderId, String newStatus) {
+	public boolean updateOrderStatus(int orderId, String newStatus) {
 		// TODO Auto-generated method stub
 		
+		PreparedStatement pstmt =null ;		
 		String query="Update Orders set Status=? where OrderId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setString(1, newStatus);
 			pstmt.setInt(2, orderId);
-			pstmt.executeUpdate();
+			int rows=pstmt.executeUpdate();
+			return rows>0;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error in updating order status "+e.getMessage());
 		}
 		finally {
 			DBConnection.closePreparedStatement(pstmt);
 		}
+		return false;
 	}
 
 	@Override
-	public void deleteOrder(int orderId) {
+	public boolean deleteOrder(int orderId) {
 		// TODO Auto-generated method stub
-		
+		PreparedStatement pstmt =null ;	
 		String query="Delete from Orders where OrderId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, orderId);
-			pstmt.executeUpdate();
+			int rows=pstmt.executeUpdate();
+			return rows>0;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error in deleting orders "+e.getMessage());
 		}
 		finally {
 			DBConnection.closePreparedStatement(pstmt);
 		}
+		return false;
 		
 	}
 
 	@Override
 	public List<Order> getOrderByCustomerId(int customerId) throws InvalidDataException {
 		// TODO Auto-generated method stub
-		
+
+		PreparedStatement pstmt = null ;		
+		ResultSet rs = null;
 		List<Order> list=new ArrayList<>();
 		
-		String query="Select OrderId,CustomerId,OrderDate,TotalAmount,Status where CustomerId=?";
-		
+		String query="Select OrderId,CustomerId,OrderDate,TotalAmount,Status from Orders where CustomerId=?";		
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, customerId);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
-				Customer c=new Customer("","","","","");
+				Customer c=new Customer();
+				c.setCustomerId(rs.getInt("CustomerId"));
 				Order o=new Order();
 				o.setOrderId(rs.getInt("OrderId"));
 				o.setCustomer(c);
-				o.setOrderDate(rs.getDate("OrderDate"));
+				o.setOrderDate(rs.getDate("OrderDate").toLocalDate());
 				o.setTotalAmount(rs.getDouble("TotalAmount"));
 				o.setOrderStatus(rs.getString("Status"));
 				list.add(o);				
@@ -111,7 +122,7 @@ public class OrderDAOImpl implements IOrderDAO{
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error in fetching orders "+e.getMessage());
 		}
 		finally {
 			DBConnection.closeResultSet(rs);
@@ -125,36 +136,81 @@ public class OrderDAOImpl implements IOrderDAO{
 	public Order getOrderById(int orderId) throws InvalidDataException {
 		// TODO Auto-generated method stub
 		
-		String query="Select OrderId,CustomerId,OrderDate,TotalAmount,Status where CustomerId=?";
+		PreparedStatement pstmt = null ;		
+		ResultSet rs = null;
+		
+		String query="Select OrderId,CustomerId,OrderDate,TotalAmount,Status from Orders where OrderId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, orderId);
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
-				Customer c=new Customer("","","","","");
-				Order o=new Order(orderId,c,rs.getDate("OrderDate"),rs.getDouble("TotalAmount"),rs.getString("Status"));
-				return o;				
+				Customer c=new Customer();
+				Order od=new Order(c,rs.getDate("OrderDate").toLocalDate(),rs.getDouble("TotalAmount"),rs.getString("Status"));
+				od.setOrderId(rs.getInt("OrderId"));
+				return od;				
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error in retrieving orders "+e.getMessage());
 		}		
 		
 		finally {
 			DBConnection.closeResultSet(rs);
 			DBConnection.closePreparedStatement(pstmt);	
-		}
-		
+		}		
 		return null;
 	}
 
 	@Override
 	public List<Order> getAllOrders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
+	    List<Order> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
+	    String query = "Select OrderId,CustomerId,OrderDate,TotalAmount,Status from Orders";
+	    try {
+	        pstmt = con.prepareStatement(query);
+	        rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            Customer customer = new Customer();
+	            customer.setCustomerId(rs.getInt("CustomerId"));
+	            Order o = new Order();
+	            o.setOrderId(rs.getInt("OrderId"));
+	            o.setCustomer(customer);
+	            o.setOrderDate(rs.getDate("OrderDate").toLocalDate());
+	            o.setTotalAmount(rs.getDouble("TotalAmount"));
+	            o.setOrderStatus(rs.getString("Status"));
+	            list.add(o);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error in fetching all orders: " + e.getMessage());
+	    } finally {
+	        DBConnection.closeResultSet(rs);
+	        DBConnection.closePreparedStatement(pstmt);
+	    }
+	    return list;
+	}
+
+	public boolean updateOrderTotalAmount(int orderId, double totalAmount) {
+	    PreparedStatement pstmt = null;
+	    String query = "Update Orders set TotalAmount = ? where OrderId = ?";
+	    try {
+	        pstmt = con.prepareStatement(query);
+	        pstmt.setDouble(1, totalAmount);
+	        pstmt.setInt(2, orderId);
+	        int rows = pstmt.executeUpdate();
+	        return rows>0;
+	        
+	    } catch (SQLException e) {
+	        System.out.println("Error updating total amount: " + e.getMessage());
+	    } 
+	    finally {
+	        DBConnection.closePreparedStatement(pstmt);
+	    }
+	    return false;
+	}
+
+	
 }

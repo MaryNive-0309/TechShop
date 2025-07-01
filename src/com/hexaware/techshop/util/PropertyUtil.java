@@ -1,6 +1,5 @@
 package com.hexaware.techshop.util;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -24,12 +23,9 @@ public class PropertyUtil {
 			String password = property.getProperty("password");
 			return "jdbc:mysql://"+host+":"+port+"/"+dbname+"?user="+user+"&password="+password;
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("File Not found");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error reading the file "+e.getMessage());
 		} 
 		return null;
 	}
