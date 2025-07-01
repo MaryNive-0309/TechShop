@@ -62,8 +62,7 @@ public class ProductDAOImpl implements IProductDAO{
 			pstmt.setString(3, product.getCategory());
 			pstmt.setInt(4, product.getProductId());
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in updating products: " + e.getMessage());
@@ -85,8 +84,7 @@ public class ProductDAOImpl implements IProductDAO{
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, productId);
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in deleting products: " + e.getMessage());
@@ -119,13 +117,11 @@ public class ProductDAOImpl implements IProductDAO{
 				p.setPrice(rs.getDouble("Price"));
 				p.setCategory(rs.getString("Category"));
 				list.add(p);
-			}
-			
+			}			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in retrieving products " +e.getMessage());
-		}
-		
+		}		
 		finally {			
 			DBConnection.closeResultSet(rs);
 			DBConnection.closePreparedStatement(pstmt);
@@ -146,7 +142,9 @@ public class ProductDAOImpl implements IProductDAO{
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
 				Product p=new Product(rs.getString("ProductName"),
-						rs.getString("Description"),rs.getDouble("Price"),rs.getString("Category"));
+						rs.getString("Description"),
+						rs.getDouble("Price"),
+						rs.getString("Category"));
 				p.setProductId(rs.getInt("ProductId"));
 				return p;							
 			}			

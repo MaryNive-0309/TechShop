@@ -25,8 +25,7 @@ public class InventoryDAOImpl implements IInventoryDAO{
 		// TODO Auto-generated method stub
 
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
-		
+        ResultSet rs = null;		
 		String query="Insert into Inventory(ProductId,QuantityInStock,LastStockUpdate) values(?,?,?)";
 		try {
 			pstmt=con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -63,8 +62,7 @@ public class InventoryDAOImpl implements IInventoryDAO{
 			pstmt.setInt(1, newQuantity);
 			pstmt.setInt(2, productId);
 			int rows = pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			 System.out.println("Error in updating: " + e.getMessage());		
@@ -85,8 +83,7 @@ public class InventoryDAOImpl implements IInventoryDAO{
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, productId);
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in deleting inventory: " + e.getMessage());		

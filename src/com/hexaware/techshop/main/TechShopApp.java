@@ -53,19 +53,18 @@ public class TechShopApp {
 			s.nextLine();
 			
 			switch(ch) {
-			case 1: //register customer		
-				 
+			case 1://register customer
 				System.out.println("--Registering new Customer--\n");
-                System.out.println("Enter First Name: ");
-                String fname = s.nextLine();
-                System.out.println("Enter Last Name: ");
-                String lname = s.nextLine();
-                System.out.println("Enter Email: ");
-                String email = s.nextLine();
-                System.out.println("Enter Phone: ");
-                String phone = s.nextLine();
-                System.out.println("Enter Address: ");
-                String address = s.nextLine();
+				System.out.println("Enter First Name: ");
+				String fname = s.nextLine();
+				System.out.println("Enter Last Name: ");
+				String lname = s.nextLine();
+				System.out.println("Enter Email: ");
+				String email = s.nextLine();
+				System.out.println("Enter Phone: ");
+				String phone = s.nextLine();
+				System.out.println("Enter Address: ");
+				String address = s.nextLine();
 				try {
 					Customer c = new Customer(fname, lname, email, phone, address);
 	                customerService.registerCustomer(c);
@@ -288,3 +287,4 @@ public class TechShopApp {
 	}
 
 }
+

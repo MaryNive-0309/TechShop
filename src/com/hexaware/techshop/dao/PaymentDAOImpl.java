@@ -23,8 +23,7 @@ public class PaymentDAOImpl implements IPaymentDAO{
 		PreparedStatement pstmt=null;
 		ResultSet rs= null;
 		
-		String query="INSERT INTO Payments(OrderId,Method,Amount,PaymentStatus) VALUES(?,?,?,?)";
-		
+		String query="INSERT INTO Payments(OrderId,Method,Amount,PaymentStatus) VALUES(?,?,?,?)";		
 		try {
 			pstmt=con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, payment.getOrder().getOrderId());
@@ -67,19 +66,19 @@ public class PaymentDAOImpl implements IPaymentDAO{
 			while(rs.next()) {
 				Order order=new Order();
 				order.setOrderId(orderId);
-				Payment payment=new Payment(order,rs.getString("Method"),
-						rs.getDouble("Amount"),rs.getString("PaymentStatus"));
+				Payment payment=new Payment(order,
+						rs.getString("Method"),
+						rs.getDouble("Amount"),
+						rs.getString("PaymentStatus"));
 				payment.setPaymentId(rs.getInt("PaymentId"));
 				list.add(payment);
 			}
 			if(list.isEmpty()) {
 				throw new PaymentNotFoundException("No payment found for OrderId "+orderId);
-			}
-			
+			}			
 		} catch (SQLException e) {
 			System.out.println("Error in retrieving payment details "+e.getMessage());
-		}
-		
+		}		
 		finally {
 			DBConnection.closeResultSet(rs);
 			DBConnection.closePreparedStatement(pstmt);
@@ -103,8 +102,10 @@ public class PaymentDAOImpl implements IPaymentDAO{
 			while(rs.next()) {
 				Order order=new Order();
 				order.setOrderId(rs.getInt("OrderId"));
-				Payment payment=new Payment(order,rs.getString("Method"),
-						rs.getDouble("Amount"),rs.getString("PaymentStatus"));
+				Payment payment=new Payment(order,
+						rs.getString("Method"),
+						rs.getDouble("Amount"),
+						rs.getString("PaymentStatus"));
 				payment.setPaymentId(rs.getInt("PaymentId"));
 				list.add(payment);
 			}

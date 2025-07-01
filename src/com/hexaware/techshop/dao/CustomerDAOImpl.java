@@ -18,12 +18,10 @@ public class CustomerDAOImpl implements ICustomerDAO{
 	
 	@Override
 	public boolean insertCustomer(Customer customer) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-		
-		String query="INSERT INTO Customers (FirstName,LastName,Email,Phone,Address) VALUES(?,?,?,?,?)";
+        String query="Insert into Customers (FirstName,LastName,Email,Phone,Address) values(?,?,?,?,?)";
 		try {
             pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, customer.getFirstName());
@@ -54,7 +52,7 @@ public class CustomerDAOImpl implements ICustomerDAO{
 		// TODO Auto-generated method stub
 		
 		PreparedStatement pstmt =null ;		
-		String query="UPDATE Customers SET Email=?, Phone=?, Address=? WHERE CustomerId=?";
+		String query="Update Customers set Email=?, Phone=?, Address=? where CustomerId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setString(1, customer.getEmail());
@@ -62,8 +60,7 @@ public class CustomerDAOImpl implements ICustomerDAO{
 			pstmt.setString(3, customer.getAddress());			
 			pstmt.setInt(4, customer.getCustomerId());
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in updating customer " +e.getMessage());
@@ -77,9 +74,8 @@ public class CustomerDAOImpl implements ICustomerDAO{
 	@Override
 	public boolean deleteCustomer(int customerId) {
 		// TODO Auto-generated method stub
-		PreparedStatement pstmt =null ;
-		
-        String query = "DELETE FROM Customers WHERE Customer_Id = ?";
+		PreparedStatement pstmt =null ;		
+        String query = "Delete from Customers where Customer_Id = ?";
         try {
             pstmt = con.prepareStatement(query);
             pstmt.setInt(1, customerId);
@@ -97,11 +93,9 @@ public class CustomerDAOImpl implements ICustomerDAO{
 	public List<Customer> getAllCustomer() throws InvalidDataException {
 		// TODO Auto-generated method stub
 		Statement stmt =null ;
-		ResultSet rs =null;
-		
-		List<Customer> list=new ArrayList<>();
-		
-		String query="SELECT CustomerId,FirstName,LastName,Email,Phone,Address FROM Customers";
+		ResultSet rs =null;		
+		List<Customer> list=new ArrayList<>();		
+		String query="Select CustomerId,FirstName,LastName,Email,Phone,Address from Customers";
 		try {
 			stmt = con.createStatement();
 			rs=stmt.executeQuery(query);
@@ -114,8 +108,7 @@ public class CustomerDAOImpl implements ICustomerDAO{
 				c.setPhone(rs.getString("Phone"));
 				c.setAddress(rs.getString("Address"));
 				list.add(c);
-			}
-			
+			}			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in retrieving customer "+e.getMessage());
@@ -131,16 +124,18 @@ public class CustomerDAOImpl implements ICustomerDAO{
 	public Customer getCustomerById(int customerId) throws InvalidDataException {
 		// TODO Auto-generated method stub
 		PreparedStatement pstmt =null ;
-		ResultSet rs =null;
-		
-		String query="SELECT CustomerId,FirstName,LastName,Email,Phone,Address FROM Customers WHERE CustomerId=?";
+		ResultSet rs =null;		
+		String query="Select CustomerId,FirstName,LastName,Email,Phone,Address from Customers where CustomerId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, customerId);
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
-				Customer c=new Customer(rs.getString("FirstName"), rs.getString("LastName"),
-						rs.getString("Email"),rs.getString("Phone"),rs.getString("Address"));
+				Customer c=new Customer(rs.getString("FirstName"),
+						rs.getString("LastName"),
+						rs.getString("Email"),
+						rs.getString("Phone"),
+						rs.getString("Address"));
 				c.setCustomerId(rs.getInt("CustomerId"));
 				return c;
 			}						

@@ -22,8 +22,7 @@ public class OrderDAOImpl implements IOrderDAO{
 	public boolean insertOrder(Order order) {
 		// TODO Auto-generated method stub
 		PreparedStatement pstmt =null ;
-		ResultSet rs =null;
-		
+		ResultSet rs =null;		
 		String query="Insert into Orders(CustomerId,OrderDate,TotalAmount,Status) values(?,?,?,?)";
 		try {
 			pstmt=con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -61,8 +60,7 @@ public class OrderDAOImpl implements IOrderDAO{
 			pstmt.setString(1, newStatus);
 			pstmt.setInt(2, orderId);
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error in updating order status "+e.getMessage());
@@ -76,16 +74,15 @@ public class OrderDAOImpl implements IOrderDAO{
 	@Override
 	public boolean deleteOrder(int orderId) {
 		// TODO Auto-generated method stub
+		
 		PreparedStatement pstmt =null ;	
 		String query="Delete from Orders where OrderId=?";
 		try {
 			pstmt=con.prepareStatement(query);
 			pstmt.setInt(1, orderId);
 			int rows=pstmt.executeUpdate();
-			return rows>0;
-			
+			return rows>0;			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error in deleting orders "+e.getMessage());
 		}
 		finally {
@@ -146,7 +143,10 @@ public class OrderDAOImpl implements IOrderDAO{
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				Customer c=new Customer();
-				Order od=new Order(c,rs.getDate("OrderDate").toLocalDate(),rs.getDouble("TotalAmount"),rs.getString("Status"));
+				Order od=new Order(c,
+						rs.getDate("OrderDate").toLocalDate(),
+						rs.getDouble("TotalAmount"),
+						rs.getString("Status"));
 				od.setOrderId(rs.getInt("OrderId"));
 				return od;				
 			}
@@ -201,8 +201,7 @@ public class OrderDAOImpl implements IOrderDAO{
 	        pstmt.setDouble(1, totalAmount);
 	        pstmt.setInt(2, orderId);
 	        int rows = pstmt.executeUpdate();
-	        return rows>0;
-	        
+	        return rows>0;	        
 	    } catch (SQLException e) {
 	        System.out.println("Error updating total amount: " + e.getMessage());
 	    } 
