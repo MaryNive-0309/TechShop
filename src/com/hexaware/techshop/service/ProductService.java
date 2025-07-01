@@ -9,21 +9,20 @@ import com.hexaware.techshop.entity.Product;
 import com.hexaware.techshop.exception.InvalidDataException;
 
 public class ProductService {
-	
-	IProductDAO productDao=new ProductDAOImpl();
-	List<Product> product=new ArrayList<>();
-	
+
+	IProductDAO productDao = new ProductDAOImpl();
+	List<Product> product = new ArrayList<>();
+
 	public void addProduct(Product product) throws InvalidDataException {
-		if(product==null || isDuplicateProduct(product.getProductName())) {
+		if (product == null || isDuplicateProduct(product.getProductName())) {
 			throw new InvalidDataException("Invalid product or Duplicate product name found");
 		}
 		productDao.insertProduct(product);
 	}
 
-
-	public void updateProduct(int productId,String description,double price) throws InvalidDataException {
-		Product product=productDao.getProductById(productId);
-		if(product==null) {
+	public void updateProduct(int productId, String description, double price) throws InvalidDataException {
+		Product product = productDao.getProductById(productId);
+		if (product == null) {
 			throw new InvalidDataException("ProductId not found");
 		}
 		product.setDescription(description);
@@ -32,42 +31,40 @@ public class ProductService {
 	}
 
 	public void removeProduct(int productId) throws InvalidDataException {
-		Product product=productDao.getProductById(productId);
-		if(product==null) {
+		Product product = productDao.getProductById(productId);
+		if (product == null) {
 			throw new InvalidDataException("ProductId not found");
 		}
 		productDao.deleteProduct(productId);
 	}
-	
-	
-	public List<Product> getAllProducts() throws InvalidDataException{
+
+	public List<Product> getAllProducts() throws InvalidDataException {
 		return productDao.getAllProduct();
 	}
-	
+
 	public Product getProductById(int productId) throws InvalidDataException {
 		return productDao.getProductById(productId);
 	}
-	
-	public List<Product> searchProductByName(String name) throws InvalidDataException{
-		List<Product> productList=productDao.getAllProduct();
-		List<Product> prod=new ArrayList<>();
-		for(Product p: productList) {
-			if(p.getProductName().contains(name)) {
+
+	public List<Product> searchProductByName(String name) throws InvalidDataException {
+		List<Product> productList = productDao.getAllProduct();
+		List<Product> prod = new ArrayList<>();
+		for (Product p : productList) {
+			if (p.getProductName().contains(name)) {
 				prod.add(p);
 			}
 		}
 		return prod;
 	}
 
-
 	public boolean isDuplicateProduct(String name) throws InvalidDataException {
-		List<Product> product=productDao.getAllProduct();
-		for(Product p:product) {
-			if(p.getProductName().equalsIgnoreCase(name)) {
+		List<Product> product = productDao.getAllProduct();
+		for (Product p : product) {
+			if (p.getProductName().equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }

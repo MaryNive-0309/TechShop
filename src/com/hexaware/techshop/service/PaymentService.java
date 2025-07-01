@@ -9,24 +9,24 @@ import com.hexaware.techshop.entity.Payment;
 import com.hexaware.techshop.exception.PaymentNotFoundException;
 
 public class PaymentService {
-	
-	List<Payment> paymentList=new ArrayList<>();
-	
-	IPaymentDAO paymentDao = new PaymentDAOImpl(); 
-	
+
+	List<Payment> paymentList = new ArrayList<>();
+
+	IPaymentDAO paymentDao = new PaymentDAOImpl();
+
 	public void recordPayment(Payment payment) {
 		paymentDao.insertPayment(payment);
 	}
-	
+
 	public List<Payment> getPaymentsByOrderId(int orderId) throws PaymentNotFoundException {
 		List<Payment> list = paymentDao.getPaymentByOrderId(orderId);
-		if(list.isEmpty()) {
-			throw new PaymentNotFoundException("No payment record found for OrderId: \n"+orderId);
+		if (list.isEmpty()) {
+			throw new PaymentNotFoundException("No payment record found for OrderId: \n" + orderId);
 		}
 		return list;
 	}
-	
-	public List<Payment> getAllPayments(){
+
+	public List<Payment> getAllPayments() {
 		return paymentDao.getAllPayments();
 	}
 

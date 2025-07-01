@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-	
+
 	private int orderId;
-    private Customer customer;
-    private LocalDate orderDate;
-    private double totalAmount;
-    private String orderStatus;
+	private Customer customer;
+	private LocalDate orderDate;
+	private double totalAmount;
+	private String orderStatus;
 
 	public Order(Customer customer, LocalDate orderDate, double totalAmount, String orderStatus) {
 		this.customer = customer;
@@ -64,38 +64,38 @@ public class Order {
 	}
 
 	List<OrderDetail> orderDetails = new ArrayList<>();
-	
+
 	public void calculateTotalAmount() {
-		totalAmount=0;
-		for(OrderDetail od: orderDetails) {
+		totalAmount = 0;
+		for (OrderDetail od : orderDetails) {
 			totalAmount += od.calculateSubtotal();
 		}
 	}
-	
+
 	public void addOrderDetail(OrderDetail detail) {
-		List<OrderDetail> orderDetails= new ArrayList<>();
+		List<OrderDetail> orderDetails = new ArrayList<>();
 		orderDetails.add(detail);
 	}
-	 
+
 	public void getOrderDetails() {
-		System.out.println("OrderId: "+orderId+ " for customer: "+customer.getFirstName());
-		for(OrderDetail od: orderDetails) {
+		System.out.println("OrderId: " + orderId + " for customer: " + customer.getFirstName());
+		for (OrderDetail od : orderDetails) {
 			od.getOrderDetailInfo();
 		}
 	}
-	
+
 	public void updateOrderStatus(String newStatus) {
-		this.orderStatus=newStatus;
+		this.orderStatus = newStatus;
 	}
-	
-	public void cancelOrder() {	
-		this.orderStatus="Cancelled";
+
+	public void cancelOrder() {
+		this.orderStatus = "Cancelled";
 	}
 
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", customer=" + (customer != null ? customer.getCustomerId() :"Null") + ", orderDate=" + orderDate + ", totalAmount="
-				+ totalAmount + ", orderStatus=" + orderStatus + "]";
+		return "Order [orderId=" + orderId + ", customer=" + (customer != null ? customer.getCustomerId() : "Null")
+				+ ", orderDate=" + orderDate + ", totalAmount=" + totalAmount + ", orderStatus=" + orderStatus + "]";
 	}
-	
+
 }

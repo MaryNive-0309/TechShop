@@ -9,7 +9,6 @@ public class Product {
 	private String description;
 	private double price;
 	private String category;
-		
 
 	public Product() {
 	}
@@ -25,42 +24,35 @@ public class Product {
 		return productId;
 	}
 
-
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-
 
 	public String getProductName() {
 		return productName;
 	}
 
-
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-
 
 	public String getDescription() {
 		return description;
 	}
 
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 
 	public double getPrice() {
 		return price;
 	}
 
-
 	public void setPrice(double price) throws InvalidDataException {
-		if(price<0)  throw new InvalidDataException("Price must be non-negative");
+		if (price < 0)
+			throw new InvalidDataException("Price must be non-negative");
 		this.price = price;
 	}
-
 
 	public String getCategory() {
 		return category;
@@ -71,11 +63,11 @@ public class Product {
 	}
 
 	public void getProductDetails() {
-	    System.out.println("Product ID: " + productId);
-	    System.out.println("Product Name: " + productName);
-	    System.out.println("Description: " + description);
-	    System.out.println("Price: " + price);
-	    System.out.println("Category: "+category);
+		System.out.println("Product ID: " + productId);
+		System.out.println("Product Name: " + productName);
+		System.out.println("Description: " + description);
+		System.out.println("Price: " + price);
+		System.out.println("Category: " + category);
 	}
 
 	@Override

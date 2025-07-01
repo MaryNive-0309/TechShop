@@ -7,11 +7,11 @@ import java.util.Properties;
 public class PropertyUtil {
 
 	public static String getPropertyString(String fileName) {
-		
-		Properties property=new Properties();
-		
-		try (InputStream input = PropertyUtil.class.getClassLoader().getResourceAsStream("db.properties")){
-			if(input==null) {
+
+		Properties property = new Properties();
+
+		try (InputStream input = PropertyUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
+			if (input == null) {
 				System.out.println("Property file not found");
 				return null;
 			}
@@ -21,12 +21,12 @@ public class PropertyUtil {
 			String dbname = property.getProperty("dbname");
 			String user = property.getProperty("username");
 			String password = property.getProperty("password");
-			return "jdbc:mysql://"+host+":"+port+"/"+dbname+"?user="+user+"&password="+password;
+			return "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?user=" + user + "&password=" + password;
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error reading the file "+e.getMessage());
-		} 
+			System.out.println("Error reading the file " + e.getMessage());
+		}
 		return null;
 	}
 }
